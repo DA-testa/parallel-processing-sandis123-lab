@@ -1,31 +1,68 @@
 # python3
 
-def parallel_processing(n, m, data):
-    output = []
-    # TODO: write the function for simulating parallel tasks, 
-    # create the output pairs
+from math import floor
+from collections import namedtuple
 
-    return output
+AssignedJob = namedtuple("AssignedJob", ["worker", "started_at"])
 
+def build_heap(n, data):
+    size = n - 1
+    for i in range(floor(n/2), -1, -1):
+        data = sift_down(i, size, data)
+    return data
+
+def compare_workers(worker1, worker2):
+    if worker1[1] != worker2[1]:
+        return worker1[1] < worker2[1]
+    else:
+        return worker1[0] < worker2[0]
+   
+def sift_down(i, size, data):
+    minIndex = i
+    l = LeftChild(i)
+    if l <= size and compare_workers(data[l], data[minIndex]):
+        minIndex = l
+    r = RightChild(i)
+    if r <= size and compare_workers(data[r], data[minIndex]):
+        minIndex = r
+    if i != minIndex:
+        data[i], data[minIndex] = data[minIndex], data[i]
+        data = sift_down(minIndex, size, data)
+    return data
+  
+def LeftChild(i):
+    return 2 * i + 1
+ 
+def RightChild(i):
+    return 2 * i + 2
+
+def ChangePriority(i, p, data, size):
+    oldp = data[i][1]
+    data[i][1] = p
+    if p > oldp:
+        sift_down(i, size, data)
+    elif p < oldp:
+        # program is not intended to handle this case
+        return -1
+      
 def main():
-    # TODO: create input from keyboard
-    # input consists of two lines
-    # first line - n and m
-    # n - thread count 
-    # m - job count
-    n = 0
-    m = 0
-
-    # second line - data 
-    # data - contains m integers t(i) - the times in seconds it takes any thread to process i-th job
-    data = []
-
-    # TODO: create the function
-    result = parallel_processing(n,m,data)
+    n_workers, n_jobs = map(int, input().split())
+    jobs = list(map(int, input().split()))
+    assert len(jobs) == n_jobs
     
-    # TODO: print out the results, each pair in it's own line
-
-
+    workers = []
+    for i in range(n_workers):
+        tmp_list = [i, jobs[i]]
+        workers.append(tmp_list)
+        print(i, 0)
+    
+    build_heap(n_workers, workers)
+    
+    for i in range(n_workers, n_jobs):
+        index = workers[0][0]
+        started_at = workers[0][1]
+        ChangePriority(0, started_at + jobs[i], workers, n_workers - 1)
+        print(index, started_at)
 
 if __name__ == "__main__":
     main()
