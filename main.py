@@ -1,8 +1,6 @@
 # python3
-
 from math import floor
 from collections import namedtuple
-
 AssignedJob = namedtuple("AssignedJob", ["worker", "started_at"])
 
 def build_heap(n, data):
@@ -42,20 +40,16 @@ def ChangePriority(i, p, data, size):
     if p > oldp:
         sift_down(i, size, data)
     elif p < oldp:
-        # program is not intended to handle this case
-        return -1
-      
+        return -1 
 def main():
     n_workers, n_jobs = map(int, input().split())
     jobs = list(map(int, input().split()))
     assert len(jobs) == n_jobs
-    
     workers = []
     for i in range(n_workers):
         tmp_list = [i, jobs[i]]
         workers.append(tmp_list)
         print(i, 0)
-    
     build_heap(n_workers, workers)
     
     for i in range(n_workers, n_jobs):
@@ -63,6 +57,5 @@ def main():
         started_at = workers[0][1]
         ChangePriority(0, started_at + jobs[i], workers, n_workers - 1)
         print(index, started_at)
-
 if __name__ == "__main__":
     main()
