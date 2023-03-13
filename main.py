@@ -1,8 +1,7 @@
-# python3
 from math import floor
 from collections import namedtuple
-AssignedJob = namedtuple("thejob", ["worker", "started"])
 
+AssignedJob = namedtuple("thejob", ["worker", "started"])
 def build_heap(n, data):
     size = n - 1
     for i in range(floor(n/2), -1, -1):
